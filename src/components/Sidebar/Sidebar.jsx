@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 import Logo from "../../imgs/logo.png";
 import { UilSignOutAlt } from "@iconscout/react-unicons";
@@ -11,6 +11,25 @@ const Sidebar = () => {
 
   const [expanded, setExpaned] = useState(true);
 
+  const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    function handleResize() {
+      setInnerWidth(window.innerWidth);
+    }
+
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Call handleResize initially to set the width on mount
+    handleResize();
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const sidebarVariants = {
     true: {
       left: "0",
@@ -19,7 +38,8 @@ const Sidebar = () => {
       left: "-60%",
     },
   };
-  console.log(window.innerWidth);
+
+  console.log("working")
   return (
     <>
       <div
@@ -32,7 +52,7 @@ const Sidebar = () => {
       <motion.div
         className="sidebar"
         variants={sidebarVariants}
-        animate={window.innerWidth <= 768 ? `${expanded}` : ""}
+        animate={innerWidth <= 768 ? `${expanded}` : ""}
       >
         {/* logo */}
         <div className="logo">
